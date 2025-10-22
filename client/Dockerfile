@@ -1,18 +1,24 @@
-#Etapa 1:Construccion de los recursos 
-FROM node:20 AS build 
+# Etapa 1: Construcción de los recursos
+FROM node:20 AS build
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install 
+RUN npm install
 
 COPY . .
-#/dist  /build (node)
-RUN nmp run build
-#Etapa 2 :Construccion de la imagen 
-FROM nginx:alpine 
+# Construir la aplicación (usa npm, no nmp)
+RUN npm run build
+
+# Etapa 2: Construcción de la imagen final
+FROM nginx:alpine
+
+# Copiar los archivos compilados al servidor Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Exponer el puerto 80 para acceder al sitio
 EXPOSE 80
-CMD ["nginx","g","daemon off;"]
+
+# Comando para mantener Nginx corriendo en primer plano
+CMD ["nginx", "-g", "daemon off;"]
