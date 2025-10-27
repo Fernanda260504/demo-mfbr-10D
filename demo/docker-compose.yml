@@ -3,7 +3,7 @@ services:
     build:
       context: ./client
     ports:
-      - "5174:80"  # cambia si el puerto está ocupado
+      - "5174:80"  
     restart: unless-stopped
     networks:
       - demo-net
